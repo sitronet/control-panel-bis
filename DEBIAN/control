@@ -1,0 +1,6 @@
+Package: controlpanel
+Version: 0.1
+Maintainer: Noel
+Architecture: all
+Description: controlpanel python programm for Lyrion music player
+depends: python3-kivy, xclip

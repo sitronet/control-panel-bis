@@ -1,0 +1,689 @@
+<SqueezeliteStatWindow>
+    name: "squeezeliteStat"
+    resultatcommande: resultatcommande
+
+    orientation: 'vertical'
+    GridLayout:
+        cols: 6
+        rows: 1
+        pos_hint:{"x": 0., "top":1}
+        size_hint:1, 0.1
+        #size_hint_y: None
+        height: dp(108)
+        padding: dp(8)
+        spacing: dp(16)
+
+        Button:
+            text: 'Enable'
+            on_press: root.enable()
+
+        Button:
+            text: 'Disable'
+            on_press: root.disable()
+
+        Button:
+            text: 'Stop'
+            on_press: root.stop()
+
+        Button:
+            text: 'Start'
+            on_press: root.start()
+
+        Button:
+            text: 'Status'
+            on_press: root.status()
+
+        Button:
+            text: "Go back"
+            on_release:
+                root.manager.transition.direction = "right"
+                root.go_back()
+
+    BoxLayout:
+        pos_hint:{"x": 0., "top":0.8}
+        size_hint: 0.8, 1
+
+        Label:
+            id: resultatcommande
+
+            text_size: self.size
+            halign: 'left'
+            valign: 'middle'
+            size_hint:  0.8 , 0.8
+            text: 'en Attente'
+
+
+<SqueezeliteSettingsWindow>
+    name: "settingsSqueeze"
+
+    GridLayout:
+        cols: 3
+        rows: 1
+        pos_hint:{"x": 0., "top":1}
+        size_hint:1, 0.1
+        #size_hint_y: 1
+        height: dp(100)
+        padding: dp(8)
+        spacing: dp(16)
+        Button:
+            text: 'Save Setting'
+            on_press:
+                root.save()
+        Button:
+            id: clear_Squeeze
+            text: 'clear all fields '
+            on_press:
+                #root.manager.transition.direction = "right"
+                root.clear()
+        Button:
+            id: btn_sortie
+            pos_hint:{"x": 0., "top":1}
+            size_hint:1, 0.1
+            text: 'Go back'
+            on_press:
+                root.manager.transition.direction = "right"
+                root.go_backBtn()
+
+    GridLayout:
+        canvas.before:
+            Color:
+                rgba: 0, 0, 1, 0.5
+            Rectangle:
+                pos: self.pos
+                size: self.size
+        cols: 3
+        rows: 6
+        pos_hint:{"x": 0., "top": 0.85}
+        size_hint:1, 0.40
+        #size_hint_y: None
+        #height: dp(10)
+        padding: dp(8)
+        spacing: dp(10)
+        #spacing_vertical: dp(16)
+        #spacing_horizontal: dp(16)
+        #padding_right: 0
+        row_default_height: 1
+        canvas.before:
+            Color:
+                rgba: 0.5, 0.5, 0.5, 1
+            Line:    # --- adds a border --- #
+                width: 1
+                rectangle: self.x, self.y, self.width, self.height
+
+        #Row 0
+        Label:
+            size_hint_x: 0.7
+            text: "name of the player"
+
+        TextInput:
+            text: root.host_name()
+
+        Label:
+            color: (0.5,0.5,0.5,1)
+            text: "Override the host name"
+
+        #Row 1
+        Label:
+            size_hint_x: 0.7
+            canvas.before:
+                Color:
+                    rgba: 1, 1, 1, 1
+                Line:    # --- adds a border --- #
+                    width: 1
+                    rectangle: self.x, self.y, self.width, self.height
+            #background_color: (1,0,0,1)
+            text: "Select output -> "
+
+        #Create Spinner to select the Output Device:
+        AnchorLayout:
+            anchor_y: 'top'
+            Spinner:
+                # Assigning id
+                id: spinner_output_id
+                # Callback
+                on_text: root.spinner_clicked(spinner_output_id.text)
+                # initially text on spinner
+                text: 'Select'
+                # total values on spinner
+                values: root.buildLists()
+
+        Label:
+            color: (0.5,0.5,0.5,1)
+            text: "Sound Output Device to use"
+
+        # Row 2
+        Label:
+            size_hint_x: 0.7
+            text: "Alsa Setting : "
+
+        GridLayout:
+            cols: 8
+            rows: 1
+            color: (1,1,1,1)
+
+            Label:
+                text: "b : "
+
+            TextInput:
+                canvas.before:
+                    Color:
+                        rgba: 0.5, 0.5, 0.5, 1
+                    Line:    # --- adds a border --- #
+                        width: 1
+                        rectangle: self.x, self.y, self.width, self.height
+                id: a_b_param
+                text: "80"
+
+            Label:
+                text: "p :"
+
+            TextInput:
+                canvas.before:
+                    Color:
+                        rgba: 0.5, 0.5, 0.5, 1
+                    Line:    # --- adds a border --- #
+                        width: 1
+                        rectangle: self.x, self.y, self.width, self.height
+                id: a_p_param
+                text: ''
+
+            Label:
+
+                text: "f :"
+
+            TextInput:
+                id: a_f_param
+                text: "32"
+
+            Label:
+                text: "m :"
+
+            TextInput:
+                id: a_m_param
+                text: "0"
+        Label:
+            color: (0.5,0.5,0.5,1)
+            text: "Alsa params settings "
+
+        #Row 3
+        Label:
+            text_size: self.size
+            halign: 'left'
+            valign: 'middle'
+            size_hint_x: 0.7
+            text: "Close output timeout (option -C)"
+        TextInput:
+            id: param_close_output
+            text: ""
+        Label:
+            color: (0.5,0.5,0.5,1)
+            text: "Set idle Timeout before \nSqueezelite closes the ouput"
+
+        #Row space between 3 et 4
+        Label:
+
+        Label:
+
+        Label:
+
+        #Row 4 to continue
+        Label:
+            size_hint_x: 0.7
+            text: "Various Options"
+        TextInput:
+            id: various_options
+            text: ""
+        Label:
+            color: (0.5,0.5,0.5,1)
+            text: "Use this field to add options not \nin this interface Ensure to include \nthe correct switch (-n or -o or else)"
+
+    BoxLayout:
+        pos_hint:{"x": 0.1, "top": 0.4}
+        size_hint: 1, 0.40
+
+        Label:
+            id: output_in_file
+            halign: 'left'
+            text: "en attente"
+
+
+
+<DrivesWindow>:
+    name: "drives"
+
+    orientation: 'vertical'
+    GridLayout:
+        cols: 4
+        rows: 1
+        pos_hint:{"x": 0., "top":1}
+        size_hint:1, 0.1
+        #size_hint_y: None
+        height: dp(108)
+        padding: dp(8)
+        spacing: dp(16)
+
+        Button:
+            text: 'Show mounted'
+            on_press: root.show()
+
+        Button:
+            text: 'clear'
+            on_press: root.clear()
+
+        Button:
+            text: 'Mount external'
+            on_press: app.root.current = "drive_to_mount"
+
+        Button:
+            text: "Go back"
+            on_release:
+                root.manager.transition.direction = "right"
+                root.go_back()
+
+    Label:
+        pos_hint:{"x": 0., "top":0.9}
+        size_hint:1, 0.1
+        text: "Currently mounted : "
+
+    BoxLayout:
+        canvas.before:
+            Color:
+                rgba: 1, 0, 0, 1
+            Line:    # --- adds a border --- #
+                width: 1
+                rectangle: self.x, self.y, self.width, self.height
+        #cols: 1
+        #rows: 1
+        pos_hint:{"x": 0.05, "top":0.8}
+        size_hint: 0.9, 0.8
+        #size_hint_y: None
+        #height: dp(108)
+        #padding: dp(8)
+        #spacing: dp(16)
+
+        #SelectableLabel:
+        #    halign: 'left'
+        # Draw a background to indicate selection
+        #    canvas.before:
+        #        Color:
+        #            rgba: (.0, 0.9, .1, .3) if self.selected else (0, 0, 0, 1)
+        #        Rectangle:
+        #            pos: self.pos
+        #            size: self.size
+
+        RV:
+            halign: 'left'
+            viewclass: 'SelectableLabel'
+            SelectableRecycleBoxLayout:
+                #size_hint: None, 0.1
+                halign: 'left'
+                default_size: None, dp(30)
+                default_size_hint: 0.98, None
+                size_hint_y: None
+                height: self.minimum_height
+                orientation: 'vertical'
+                multiselect: True
+                touch_multiselect: True
+    #Label:
+    #    id: mounted
+    #    text: 'en Attente'
+
+
+<Drive_to_mountWindow>:
+    name: "drive_to_mount"
+
+    orientation: 'vertical'
+    GridLayout:
+        cols: 4
+        rows: 1
+        pos_hint:{"x": 0., "top":1}
+        size_hint:1, 0.1
+        #size_hint_y: None
+        height: dp(108)
+        padding: dp(8)
+        spacing: dp(16)
+
+        Button:
+            text: 'Stop'
+            on_press: root.stop()
+
+        Button:
+            text: 'Clear the show'
+            on_press: root.clear_lsblk()
+
+        Button:
+            text: 'Show disk device'
+            on_press: root.show_lsblk()
+
+        Button:
+            text: "Go back"
+            on_release:
+                root.manager.transition.direction = "right"
+                root.go_back()
+
+    GridLayout:
+        rows: 4
+        cols: 8
+
+        pos_hint:{"x": 0., "top":0.9}
+        size_hint: 1, 0.2
+
+        Label:
+            text_size: self.size
+            halign: 'right'
+            valign: 'middle'
+            text: 'CIFS'
+        Label:
+            text: 'Mount point\nlocal'
+        Label:
+            text: 'Ip address\nremote'
+        Label:
+            text: 'Share Name\nremote'
+        Label:
+            text: 'Username'
+        Label:
+            text: 'Password'
+        Label:
+            text: 'Options'
+        Label:
+            text: 'save bouton'
+
+
+        Label:
+            text_size: self.size
+            halign: 'right'
+            valign: 'middle'
+            text: "/cifs/"
+        TextInput:
+            id: mount_point_cifs
+        TextInput:
+            id: ip_address_cifs
+        TextInput:
+            id: share_name_cifs
+        TextInput:
+            id: username_cifs
+        TextInput:
+            id: mot_de_passe_cifs
+        TextInput:
+            id: option_sup_cifs
+        Button:
+            id: save_bouton
+            text: 'Save...'
+            on_release: root.save_cifs()
+
+        Label:
+            text_size: self.size
+            halign: 'right'
+            valign: 'middle'
+            text: 'NFS'
+        Label:
+            text: 'Mount point\nlocal'
+        Label:
+            text: 'Ip address\nremote'
+        Label:
+            text: 'Share Name\nremote'
+        Label:
+            text: 'Username'
+        Label:
+            text: 'Password'
+        Label:
+            text: ''
+        Label:
+            text: 'Save bouton'
+
+        Label:
+            text_size: self.size
+            halign: 'right'
+            valign: 'middle'
+            text: "/net/"
+        TextInput:
+            id: mount_point_nfs
+        TextInput:
+            id: ip_address_nfs_server
+        TextInput:
+            id: share_name_nfs_server
+        Label:
+            id: username_nfs
+        Label:
+            id: mot_de_passe_nfs
+        TextInput:
+            id: option_nfs
+        Button:
+            id: save_bouton_nfs
+            text: 'Save...'
+            on_release: root.save_nfs()
+
+
+    BoxLayout:
+        id: box_interactive
+        canvas.before:
+            Color:
+                rgba: 0.5, 0.5, 0.5, 1
+            Line:    # --- adds a border --- #
+                width: 1
+                rectangle: self.x, self.y, self.width, self.height
+        orientation: "vertical"
+        pos_hint:{"x": 0.05, "top":0.65}
+        size_hint: 0.9, 0.6
+
+        Label:
+            id: entree_fichier_a_ecrire
+            size_hint: 1, 0.1
+
+        ScrollableLabel:
+            id: scrolllabel
+            size_hint: 1, 0.7
+
+            Label:
+                id: labelscrollable
+                halign: 'left'
+                text: 'waiting'
+                font_size: 15
+                text_size: self.width, None
+                size_hint_y: None
+                height: self.texture_size[1]
+
+        GridLayout:
+            cols: 3
+            rows: 1
+            size_hint: 1, 0.1
+
+            Button:
+                id: confirmation_cifs
+                disabled: True
+                text: "Wait process "
+                on_release: root.confirmer_cifs()
+
+            Button:
+                id: confirmation_nfs
+                disabled: True
+                text: "Wait process "
+                on_release: root.confirmer_nfs()
+
+            Button:
+                id: cancel_write
+                disabled: True
+                text: "Wait process "
+                on_release: root.cancel_write()
+
+        #Label:
+        #    id: status
+        #    text: 'en Attente'
+
+
+<LMSWindow>:
+    name: "lyrion"
+    status: "status"
+
+    orientation: 'vertical'
+    GridLayout:
+        cols: 6
+        rows: 1
+        pos_hint:{"x": 0., "top":1}
+        size_hint:1, 0.1
+        #size_hint_y: None
+        height: dp(108)
+        padding: dp(8)
+        spacing: dp(16)
+
+        Button:
+            text: 'Enable'
+            on_press: root.enable()
+
+        Button:
+            text: 'Disable'
+            on_press: root.disable()
+
+        Button:
+            text: 'Stop'
+            on_press: root.stop()
+
+        Button:
+            text: 'Start'
+            on_press: root.start()
+
+        Button:
+            text: 'Status'
+            on_press: root.statusBtn()
+
+        Button:
+            text: "Go back"
+            on_release:
+                root.manager.transition.direction = "right"
+                root.go_back()
+
+    Label:
+        text_size: self.size
+        halign: 'left'
+        valign: 'middle'
+        id: status
+        text: 'en Attente'
+
+<AboutWindow>:
+    name: "about"
+
+    FloatLayout:
+
+        Label:
+            text:" A Propos: "
+            font_size: (root.width**2 + root.height**2) / 13**4
+            pos_hint: {"x":0., "top":1}
+            size_hint: 1, 0.1
+
+        Label:
+            pos_hint: {"x":0., "y":0.}
+            #size: 600, 400
+            text: "Thank you for using Music Player \n Noël ++"
+
+        Button:
+            pos_hint:{"x":0.6,"y":0.}
+            size_hint: 0.2, 0.1
+            #font_size: (root.width**2 + root.height**2) / 15**4
+            text: "Go back"
+            on_release:
+                root.manager.transition.direction = "right"
+                root.go_backBtn()
+
+<HelpWindow>:
+    name: "help"
+
+    FloatLayout:
+
+        Label:
+            text:" Help page  "
+            font_size: (root.width**2 + root.height**2) / 13**4
+            pos_hint: {"x":0., "top":1}
+            size_hint: 1, 0.1
+
+        Label:
+            pos_hint: {"x":0., "y":0.}
+            #size: 600, 400
+            text: "ici vous trouvez l'aide"
+
+        Button:
+            pos_hint:{"x":0.6,"y":0.}
+            size_hint: 0.2, 0.1
+            #font_size: (root.width**2 + root.height**2) / 15**4
+            text: "Go back"
+            on_release:
+                root.manager.transition.direction = "right"
+                root.go_backBtn()
+
+
+<MainWindow>:
+    accueil: accueil
+
+    FloatLayout:
+        Label:
+            id: accueil
+            pos_hint:{"x": 0., "top":1}
+            size_hint:1, 0.1
+            font_size: (root.width**2 + root.height**2) / 13**4
+            text: "Home"
+
+        Label:
+            id: zone_texte
+            pos_hint:{"x": 0.1, "top":0.8}
+            size_hint:1, 0.6
+            font_size: (root.width**2 + root.height**2) / 15**4
+            text: "Lyrion music player project prototype \ninspired by Picoreplayer and Daphile \n for my aspire One"
+
+        Button:
+            pos_hint:{"x":0., "y": 0.8}
+            size_hint:0.2,0.1
+            text: "Accueil (Home)"
+            on_release:
+                app.root.current = "accueil"
+                root.manager.transition.direction = "left"
+
+        Button:
+            pos_hint:{"x": 0., "y":0.7}
+            size_hint:0.2,0.1
+            text: " stop/start \n squeezelite (F4)  "
+            on_release:
+                app.root.current = "squeezeliteStat"
+                root.manager.transition.direction = "left"
+
+        Button:
+            pos_hint:{"x": 0., "y":0.6}
+            size_hint:0.2,0.1
+            text: "squeeZelite \n  settings (F5)"
+            on_release:
+                app.root.current = "settingsSqueeze"
+                root.manager.transition.direction = "left"
+
+        Button:
+            pos_hint:{"x": 0., "y":0.5}
+            size_hint:0.2,0.1
+            text: "Drives (F6)"
+            on_release:
+                app.root.current = "drives"
+                root.manager.transition.direction = "left"
+
+        Button:
+            pos_hint:{"x": 0., "y":0.4}
+            size_hint:0.2,0.1
+            text: "Lyrion Server (F7)"
+            on_release:
+                app.root.current = "lyrion"
+                root.manager.transition.direction = "left"
+
+        Button:
+            pos_hint:{"x": 0., "y":0.3}
+            size_hint:0.2,0.1
+            text: "about (F8)"
+            on_release:
+                app.root.current = "about"
+                root.manager.transition.direction = "left"
+
+        Button:
+            pos_hint:{"x": 0., "y":0.2}
+            size_hint:0.2,0.1
+            text: "exit (ESC)"
+            on_release:
+                exit()
+
+        Label:
+            pos_hint:{"x": 0.1, "y":0.01}
+            size_hint: 1,0.1
+            text: "Press F1 for Application settings - F2 for Help -  Esc to Quit \nTrackPad not Working : try a real mouse or try weston   "
