@@ -17,3 +17,10 @@ depends : python3-kivy, xclip
 
 TODO:
 
+![CaptureControlPanel-1](https://github.com/user-attachments/assets/a696ab39-1b19-4776-b479-398911b8eda2)
+
+![CaptureControlPanel-2](https://github.com/user-attachments/assets/d57e824b-1663-4e11-8caf-f49e9fe2ccb4)
+
+![CaptureControlPanel-3](https://github.com/user-attachments/assets/df332101-6154-48c7-b586-4096a48840e5)
+
+![CaptureControlPanel-4](https://github.com/user-attachments/assets/4a2b363e-0363-446d-8e98-8e4a1e09ee20)
