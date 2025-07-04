@@ -19,7 +19,7 @@ TODO:
 
 ![CaptureControlPanel-1](https://github.com/user-attachments/assets/a696ab39-1b19-4776-b479-398911b8eda2)
 
-![CaptureControlPanel-2](https://github.com/user-attachments/assets/d57e824b-1663-4e11-8caf-f49e9fe2ccb4)
+![CaptureControlPanel-6](https://github.com/user-attachments/assets/de745631-9075-41fb-b7a2-5102c721fc7c)
 
 ![CaptureControlPanel-3](https://github.com/user-attachments/assets/df332101-6154-48c7-b586-4096a48840e5)
 
