@@ -352,6 +352,10 @@ class DrivesWindow(Screen):
 
 class Drive_to_mountWindow(Screen):
 
+    def __init__(self, **kwargs):
+        super().__init__(**kwargs)
+        self.show_auto_mounted()
+
     # Define scrollview class
     class ScrollableLabel(ScrollView):
         text = StringProperty('')
@@ -496,6 +500,7 @@ class Drive_to_mountWindow(Screen):
         self.ids.cancel_write.disabled = True
         self.ids.confirmation_cifs.text =''
         self.ids.cancel_write.text = ''
+        self.show_auto_mounted()
         return
 
 
@@ -578,7 +583,79 @@ class Drive_to_mountWindow(Screen):
         self.ids.cancel_write.disabled = True
         self.ids.confirmation_nfs.text =''
         self.ids.cancel_write.text = ''
+        self.show_auto_mounted()
         return
+
+    def show_auto_mounted(self):
+        self.ids.cifs_actual_mount.text = 'no actual cifs mount'
+        self.ids.nfs_actual_mount.text =  'no actual nfs mount'
+        ''' touch the files auto.nfs auto.cifs to be sure
+            before acces them
+        '''
+        try:
+            resultat_status = subprocess.call([ 'touch', '/etc/auto.master.d/auto.cifs'],
+                                stdout=subprocess.PIPE,stderr=subprocess.PIPE, text=True)
+        except Exception as err:
+            print(f"Unexpected {err=}, {type(err)=}")
+        try:
+            resultat_status = subprocess.call([ 'touch', '/etc/auto.master.d/auto.nfs'],
+                                stdout=subprocess.PIPE,stderr=subprocess.PIPE, text=True)
+        except Exception as err:
+            print(f"Unexpected {err=}, {type(err)=}")
+
+        try:
+            f = open('/etc/auto.master.d/auto.cifs', 'r')
+            for line in f:
+                self.ids.cifs_actual_mount.text = line
+            f.close()
+        except Exception as err:
+            print(f"Unexpected {err=}, {type(err)=}")
+            raise
+
+        try:
+            f = open('/etc/auto.master.d/auto.nfs', 'r')
+            for line in f:
+                self.ids.nfs_actual_mount.text = line
+            f.close()
+        except Exception as err:
+            print(f"Unexpected {err=}, {type(err)=}")
+            raise
+
+    def delete_cifs_mount(self):
+        if self.ids.cifs_actual_mount.text == 'no actual cifs mount':
+            self.ids.labelscrollable.text= 'Nothing to remove'
+        else:
+            les_lignes_a_reproduire = ''
+            f = open('/etc/auto.master.d/auto.cifs', 'r')
+            for line in f:
+                if line == self.ids.cifs_actual_mount.text:
+                    pass
+                else:
+                    les_lignes_a_reproduire += line
+            f.close()
+            f = open('/etc/auto.master.d/auto.cifs', 'wt')
+            f.write(les_lignes_a_reproduire)
+            f.close()
+            self.ids.labelscrollable.text = 'Suppression cifs faite'
+        self.show_auto_mounted()
+
+    def delete_nfs_mount(self):
+        if self.ids.nfs_actual_mount.text == 'no actual nfs mount':
+            self.ids.labelscrollable.text= 'Nothing to remove'
+        else:
+            les_lignes_a_reproduire = ''
+            f = open('/etc/auto.master.d/auto.nfs', 'r')
+            for line in f:
+                if line == self.ids.nfs_actual_mount.text:
+                    pass
+                else:
+                    les_lignes_a_reproduire += line
+            f.close()
+            f = open('/etc/auto.master.d/auto.nfs', 'wt')
+            f.write(les_lignes_a_reproduire)
+            f.close()
+            self.ids.labelscrollable.text = 'Suppression nfs faite'
+        self.show_auto_mounted()
 
     def stop(self):
         notYetImplemented()

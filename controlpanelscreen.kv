@@ -1,5 +1,11 @@
 <SqueezeliteStatWindow>
     name: "squeezeliteStat"
+    canvas.before:
+        Color:
+            rgba: 0.6 , 1.0 , 1.0 , 0.3
+        Rectangle:
+            pos: self.pos
+            size: self.size
     resultatcommande: resultatcommande
 
     orientation: 'vertical'
@@ -55,6 +61,12 @@
 
 <SqueezeliteSettingsWindow>
     name: "settingsSqueeze"
+    canvas.before:
+        Color:
+            rgba: 0.6 , 1.0 , 1.0 , 0.3
+        Rectangle:
+            pos: self.pos
+            size: self.size
 
     GridLayout:
         cols: 3
@@ -116,6 +128,7 @@
             text: "name of the player"
 
         TextInput:
+            write_tab: False
             text: root.host_name()
 
         Label:
@@ -172,6 +185,7 @@
                         width: 1
                         rectangle: self.x, self.y, self.width, self.height
                 id: a_b_param
+                write_tab: False
                 text: "80"
 
             Label:
@@ -185,6 +199,7 @@
                         width: 1
                         rectangle: self.x, self.y, self.width, self.height
                 id: a_p_param
+                write_tab: False
                 text: ''
 
             Label:
@@ -193,6 +208,7 @@
 
             TextInput:
                 id: a_f_param
+                write_tab: False
                 text: "32"
 
             Label:
@@ -200,6 +216,7 @@
 
             TextInput:
                 id: a_m_param
+                write_tab: False
                 text: "0"
         Label:
             color: (0.5,0.5,0.5,1)
@@ -214,6 +231,7 @@
             text: "Close output timeout (option -C)"
         TextInput:
             id: param_close_output
+            write_tab: False
             text: ""
         Label:
             color: (0.5,0.5,0.5,1)
@@ -232,6 +250,7 @@
             text: "Various Options"
         TextInput:
             id: various_options
+            write_tab: False
             text: ""
         Label:
             color: (0.5,0.5,0.5,1)
@@ -250,6 +269,12 @@
 
 <DrivesWindow>:
     name: "drives"
+    canvas.before:
+        Color:
+            rgba: 0.6 , 1.0 , 1.0 , 0.3
+        Rectangle:
+            pos: self.pos
+            size: self.size
 
     orientation: 'vertical'
     GridLayout:
@@ -331,6 +356,12 @@
 
 <Drive_to_mountWindow>:
     name: "drive_to_mount"
+    canvas.before:
+        Color:
+            rgba: 0.6 , 1.0 , 1.0 , 0.3
+        Rectangle:
+            pos: self.pos
+            size: self.size
 
     orientation: 'vertical'
     GridLayout:
@@ -395,16 +426,22 @@
             valign: 'middle'
             text: "/cifs/"
         TextInput:
+            write_tab: False
             id: mount_point_cifs
         TextInput:
+            write_tab: False
             id: ip_address_cifs
         TextInput:
+            write_tab: False
             id: share_name_cifs
         TextInput:
+            write_tab: False
             id: username_cifs
         TextInput:
+            write_tab: False
             id: mot_de_passe_cifs
         TextInput:
+            write_tab: False
             id: option_sup_cifs
         Button:
             id: save_bouton
@@ -437,22 +474,81 @@
             valign: 'middle'
             text: "/net/"
         TextInput:
+            write_tab: False
             id: mount_point_nfs
         TextInput:
+            write_tab: False
             id: ip_address_nfs_server
         TextInput:
+            write_tab: False
             id: share_name_nfs_server
         Label:
             id: username_nfs
         Label:
             id: mot_de_passe_nfs
         TextInput:
+            write_tab: False
             id: option_nfs
         Button:
             id: save_bouton_nfs
             text: 'Save...'
             on_release: root.save_nfs()
 
+    BoxLayout:
+        id: actual_mount_cifs
+        canvas.before:
+            Color:
+                rgba: 0.5, 0.5, 0.5, 1
+            Line:    # --- adds a border --- #
+                width: 1
+                rectangle: self.x, self.y, self.width, self.height
+        #orientation: 'horizontal'
+
+        pos_hint: {'x':0.05, 'top': 0.67}
+        size_hint: 0.9, 0.05
+        #padding: dp(8)
+        #spacing: dp(8)
+
+        Label:
+            id: cifs_actual_mount
+            #size_hint_x: 0.6, None
+            #pos_hint: {'x':0.05, 'top': 0.67}
+            #size_hint: None, None
+            #text_size: self.size
+            #halign: 'left'
+            #valign: 'middle'
+            text: 'no actual cifs mount'
+
+        Button:
+            id: cifs_mount_remove
+            size_hint: 0.3, 1
+            text: 'remove mount cifs'
+            on_release: root.delete_cifs_mount()
+
+    BoxLayout:
+        id: actual_mount_nfs
+        canvas.before:
+            Color:
+                rgba: 0.5, 0.5, 0.5, 1
+            Line:    # --- adds a border --- #
+                width: 1
+                rectangle: self.x, self.y, self.width, self.height
+        orientation: 'horizontal'
+        pos_hint: {'x':0.05, 'top': 0.63}
+        size_hint: 0.9, 0.05
+
+        Label:
+            id: nfs_actual_mount
+            #text_size: self.size
+            halign: 'left'
+            valign: 'middle'
+            text: 'no actual nfs mount'
+
+        Button:
+            id: nfs_mount_remove
+            size_hint: 0.3, 1
+            text: 'remove mount nfs'
+            on_release: root.delete_nfs_mount()
 
     BoxLayout:
         id: box_interactive
@@ -463,8 +559,8 @@
                 width: 1
                 rectangle: self.x, self.y, self.width, self.height
         orientation: "vertical"
-        pos_hint:{"x": 0.05, "top":0.65}
-        size_hint: 0.9, 0.6
+        pos_hint:{"x": 0.05, "top":0.5}
+        size_hint: 0.9, 0.4
 
         Label:
             id: entree_fichier_a_ecrire
@@ -513,6 +609,12 @@
 
 <LMSWindow>:
     name: "lyrion"
+    canvas.before:
+        Color:
+            rgba: 0.6 , 1.0 , 1.0 , 0.3
+        Rectangle:
+            pos: self.pos
+            size: self.size
     status: "status"
 
     orientation: 'vertical'
@@ -563,6 +665,12 @@
     name: "about"
 
     FloatLayout:
+        canvas.before:
+            Color:
+                rgba: 0.6 , 1.0 , 1.0 , 0.3
+            Rectangle:
+                pos: self.pos
+                size: self.size
 
         Label:
             text:" A Propos: "
@@ -588,6 +696,12 @@
     name: "help"
 
     FloatLayout:
+        canvas.before:
+            Color:
+                rgba: 0.6 , 1.0 , 1.0 , 0.3
+            Rectangle:
+                pos: self.pos
+                size: self.size
 
         Label:
             text:" Help page  "
@@ -614,6 +728,12 @@
     accueil: accueil
 
     FloatLayout:
+        canvas.before:
+            Color:
+                rgba: 0.6 , 1.0 , 1.0 , 0.3
+            Rectangle:
+                pos: self.pos
+                size: self.size
         Label:
             id: accueil
             pos_hint:{"x": 0., "top":1}
